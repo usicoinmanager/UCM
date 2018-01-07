@@ -56,7 +56,7 @@
      <section>
         <div class="content-wrapper">
            <div class="content-heading" style="margin-bottom:10px;">
-               <h3 class="mt0 mb0">UCM Updater</h3>
+               <h3 class="mt0 mb0">UCM Update</h3>
 		   </div>
            <div class="col-lg-12">
               <div v-show="status.maintenance">
@@ -275,7 +275,7 @@
         var li = document.createElement("LI");
         var a = document.createElement("A");
         a.href = "#";
-        a.innerHTML = '<em class="fa fa-cloud-upload"></em><span>UCM Updater</span>';
+        a.innerHTML = '<em class="fa fa-cloud-upload"></em><span>UCM Update</span>';
         a.style = "color: #fff;";
         li.addEventListener("click", injectPage);
         li.style = "background-color: #1e2835;";
