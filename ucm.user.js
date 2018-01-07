@@ -67,7 +67,7 @@
               <div v-show="update">
                 <h5>Update</h5>
                 <p>There is an update avalibe</p>
-                <a href="https://rawgit.com/usicoinmanager/UCM/master/ucm.user.js" class="btn btn-success>Update now</a>
+                <a href="https://rawgit.com/usicoinmanager/UCM/master/ucm.user.js" class="btn btn-success">Update now</a>
               </div>
 
               <div v-show="!status.maintenance">
@@ -78,8 +78,8 @@
                  <h5>Tasks:</h5>
                  <p>Active packages: {{ status.packages.active }}</p>
                  <p>Completed packages: {{ status.packages.completed }}</p>
-                 <p>Token packages: {{ status.packages.token }}</p>
-                 <p>Commissions: {{ status.commissions }}</p>
+                 <p style="color: #c0c0c0;">Token packages: {{ status.packages.token }}</p>
+                 <p style="color: #c0c0c0;">Commissions: {{ status.commissions }}</p>
                  <p>Sending data to UCM: {{ status.sending }}</p>
 
                  <button class="btn btn-primary" v-on:click="start" :disabled="running || !ready">Start data transfer</button>
@@ -139,6 +139,7 @@
                     }
                     if(r.data && r.data.user){
                         this.status.maintenance = r.data.maintenance;
+                        this.status.last_date = r.data.last_update.date;
                         this.ready = true;
                         console.log(r.data);
                     }else{
