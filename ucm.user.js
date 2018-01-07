@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         UCM
 // @namespace    http://tampermonkey.net/
-// @version      0.34
+// @version      0.35
 // @description  turn your data into something that makes sense
 // @author       UCM
 // @match        https://shield.usitech-int.com/*
@@ -14,7 +14,7 @@
 
 (function() {
     'use strict';
-    const version = 0.34; //test of the update function
+    const version = 0.35; //test of the update function
     const promiseSerial = funcs => funcs.reduce((promise, func) => promise.then(result => func().then(Array.prototype.concat.bind(result))), Promise.resolve([]));
     function parsePackagePopup(r){
         r = r.replace('setpopup(', '').replace(')', '').split("'").join("").split(" ").join("");
