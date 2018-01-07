@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         UCM
 // @namespace    http://tampermonkey.net/
-// @version      0.33
+// @version      0.34
 // @description  turn your data into something that makes sense
 // @author       UCM
 // @match        https://shield.usitech-int.com/*
@@ -14,7 +14,7 @@
 
 (function() {
     'use strict';
-    const version = 0.33; //test of the update function
+    const version = 0.34; //test of the update function
     const promiseSerial = funcs => funcs.reduce((promise, func) => promise.then(result => func().then(Array.prototype.concat.bind(result))), Promise.resolve([]));
     function parsePackagePopup(r){
         r = r.replace('setpopup(', '').replace(')', '').split("'").join("").split(" ").join("");
@@ -103,7 +103,7 @@
      </section>
 `,
             data: {
-		showLogin: false,
+		showLogin: true,
                 update: false,
                 partner_id: 0,
                 ready: false,
@@ -155,7 +155,8 @@
                         this.status.maintenance = r.data.maintenance;
                         this.status.last_date = r.data.last_update.date;
                         this.ready = true;
-                        console.log(r.data);
+			this.showLogin = false;
+                  
                     }else{
                         this.showLogin = true;
                     }
