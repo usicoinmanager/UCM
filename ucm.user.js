@@ -14,6 +14,7 @@
 
 (function() {
     'use strict';
+    const version = 0.1;
     const promiseSerial = funcs => funcs.reduce((promise, func) => promise.then(result => func().then(Array.prototype.concat.bind(result))), Promise.resolve([]));
     function parsePackagePopup(r){
         r = r.replace('setpopup(', '').replace(')', '').split("'").join("").split(" ").join("");
@@ -62,6 +63,13 @@
                 <h5>System maintenance</h5>
                 <p>We are updating the UCM system, and you can not send any data at the moment, try again later</p>
               </div>
+
+              <div v-show="update">
+                <h5>Update</h5>
+                <p>There is an update avalibe</p>
+                <a href="https://rawgit.com/usicoinmanager/UCM/master/ucm.user.js" class="btn btn-success>Update now</a>
+              </div>
+
               <div v-show="!status.maintenance">
 
                  <h5>Details:</h5>
@@ -81,6 +89,7 @@
      </section>
 `,
             data: {
+                update: false,
                 partner_id: 0,
                 ready: false,
                 running: false,
@@ -123,6 +132,11 @@
                         data: {payload: this.payload},
                         withCredentials: true
                     }).then( r => {
+                    if(r.data && r.data.version){
+                        if(parseFloat(r.data.version) > version){
+                            this.update = true;
+                        }
+                    }
                     if(r.data && r.data.user){
                         this.status.maintenance = r.data.maintenance;
                         this.ready = true;
