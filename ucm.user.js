@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         UCM
 // @namespace    http://tampermonkey.net/
-// @version      0.36
+// @version      0.37
 // @description  turn your data into something that makes sense
 // @author       UCM
 // @match        https://shield.usitech-int.com/*
@@ -14,7 +14,7 @@
 
 (function() {
     'use strict';
-    const version = 0.36; //test of the update function
+    const version = 0.37; //test of the update function
     const promiseSerial = funcs => funcs.reduce((promise, func) => promise.then(result => func().then(Array.prototype.concat.bind(result))), Promise.resolve([]));
     function parsePackagePopup(r){
         r = r.replace('setpopup(', '').replace(')', '').split("'").join("").split(" ").join("");
@@ -87,6 +87,7 @@
 
               <div v-if="showLogin">
                 <h5>UCM Login</h5>
+                <p v-if="loginError" style="color: red;">{{ loginError }}</p>
                 <div class="form-group">
                   <label>Username</label>
                   <input class="form-control" v-model="username">
@@ -103,6 +104,7 @@
      </section>
 `,
             data: {
+                loginError: false,
                 showLogin: true,
                 username: "",
                 password: "",
@@ -191,8 +193,12 @@
                         },
                         withCredentials: true
                     }).then(r => {
-
-                                 this.getStatus();
+if(r.data){
+this.getStatus();
+}else{
+this.loginError = "Email or Password are incorrect";
+}
+                              
                     }).catch(err => console.error(err));
                 },
                 fetch(type){
