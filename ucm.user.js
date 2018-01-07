@@ -64,10 +64,10 @@
                 <p>We are updating the UCM system, and you can not send any data at the moment, try again later</p>
               </div>
 
-              <div v-show="update mb-3">
+              <div v-show="update" class="mb-3">
                 <h5>Update</h5>
                 <p>There is an update available</p>
-                <a href="https://rawgit.com/usicoinmanager/UCM/master/ucm.user.js" class="btn btn-success">Update now</a>
+                <a href="https://github.com/usicoinmanager/UCM/raw/master/ucm.user.js" class="btn btn-success">Update now</a>
               </div>
 
               <div v-show="!status.maintenance">
