@@ -124,7 +124,6 @@
                 }
             },
             mounted(){
-                this.ready = true;
                 this.partner_id = document.querySelector("a[href*=xuserid]").getAttribute('href').split('xuserid=')[1].split("&")[0];
 
                 axios(this.paths.ucm.status + "/" + this.partner_id, {
