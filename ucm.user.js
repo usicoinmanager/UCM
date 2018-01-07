@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         UCM
 // @namespace    http://tampermonkey.net/
-// @version      0.37
+// @version      0.38
 // @description  turn your data into something that makes sense
 // @author       UCM
 // @match        https://shield.usitech-int.com/*
@@ -14,7 +14,7 @@
 
 (function() {
     'use strict';
-    const version = 0.37; //test of the update function
+    const version = 0.38; //test of the update function
     const promiseSerial = funcs => funcs.reduce((promise, func) => promise.then(result => func().then(Array.prototype.concat.bind(result))), Promise.resolve([]));
     function parsePackagePopup(r){
         r = r.replace('setpopup(', '').replace(')', '').split("'").join("").split(" ").join("");
@@ -90,11 +90,11 @@
                 <p v-if="loginError" style="color: red;">{{ loginError }}</p>
                 <div class="form-group">
                   <label>Username</label>
-                  <input class="form-control" v-model="username">
+                  <input class="form-control" v-model="username" v-on:keyup.enter="doLogin">
                 </div>
                 <div class="form-group">
                   <label>Password</label>
-                  <input class="form-control" v-model="password" type="password">
+                  <input class="form-control" v-model="password" type="password" v-on:keyup.enter="doLogin">
                 </div>
                 <button class="btn btn-primary" v-on:click="doLogin">Login</button>
               </div>
