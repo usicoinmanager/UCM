@@ -70,7 +70,7 @@
                 <a href="https://github.com/usicoinmanager/UCM/raw/master/ucm.user.js" class="btn btn-success">Update now</a>
               </div>
 
-              <div v-show="!status.maintenance">
+              <div v-if="!status.maintenance && !showLogin">
 
                  <h5>Details:</h5>
                  <p>Last transfer: {{ status.last_date }}</p>
@@ -84,11 +84,26 @@
 
                  <button class="btn btn-primary" v-on:click="start" :disabled="running || !ready">Start data transfer</button>
               </div>
+
+              <div v-show="showLogin">
+                <h5>UCM Login</h5> 
+                <div class="form-group">
+                  <label>Username</label>
+                  <input class="form-control">
+                </div>
+                <div class="form-group">
+                  <label>Password</label>
+                  <input class="form-control">
+                </div>
+                <button class="btn btn-primary">Login</button>
+              </div>
+
            </div>
         </div>
      </section>
 `,
             data: {
+		showLogin: false,
                 update: false,
                 partner_id: 0,
                 ready: false,
@@ -142,8 +157,7 @@
                         this.ready = true;
                         console.log(r.data);
                     }else{
-                        //login is required
-                        console.log("user is not loggedin");
+                        this.showLogin = true;
                     }
 
                     }).catch( error => this.status.last_date = "Failed to connect to UCM, try again later");
