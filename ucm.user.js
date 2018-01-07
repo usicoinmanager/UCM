@@ -85,17 +85,17 @@
                  <button class="btn btn-primary" v-on:click="start" :disabled="running || !ready">Start data transfer</button>
               </div>
 
-              <div v-show="showLogin">
-                <h5>UCM Login</h5> 
+              <div v-if="showLogin">
+                <h5>UCM Login</h5>
                 <div class="form-group">
                   <label>Username</label>
-                  <input class="form-control">
+                  <input class="form-control" v-model="username">
                 </div>
                 <div class="form-group">
                   <label>Password</label>
-                  <input class="form-control">
+                  <input class="form-control" v-model="password" type="password">
                 </div>
-                <button class="btn btn-primary">Login</button>
+                <button class="btn btn-primary" v-on:click="doLogin">Login</button>
               </div>
 
            </div>
@@ -103,7 +103,10 @@
      </section>
 `,
             data: {
-		showLogin: true,
+                showLogin: true,
+                username: "",
+                password: "",
+
                 update: false,
                 partner_id: 0,
                 ready: false,
@@ -123,7 +126,8 @@
                     commissions:     'https://shield.usitech-int.com/news.dhtml',
                     ucm: {
                         commit: 'https://beta.usicoinmanager.com/api/v1/import',
-                        status: 'https://beta.usicoinmanager.com/api/v1/import/status'
+                        status: 'https://beta.usicoinmanager.com/api/v1/import/status',
+                        login: 'https://beta.usicoinmanager.com/api/v1/login'
                     }
                 },
                 status: {
@@ -140,28 +144,7 @@
             },
             mounted(){
                 this.partner_id = document.querySelector("a[href*=xuserid]").getAttribute('href').split('xuserid=')[1].split("&")[0];
-
-                axios(this.paths.ucm.status + "/" + this.partner_id, {
-                        method: "get",
-                        data: {payload: this.payload},
-                        withCredentials: true
-                    }).then( r => {
-                    if(r.data && r.data.version){
-                        if(parseFloat(r.data.version) > version){
-                            this.update = true;
-                        }
-                    }
-                    if(r.data && r.data.user){
-                        this.status.maintenance = r.data.maintenance;
-                        this.status.last_date = r.data.last_update.date;
-                        this.ready = true;
-			this.showLogin = false;
-                  
-                    }else{
-                        this.showLogin = true;
-                    }
-
-                    }).catch( error => this.status.last_date = "Failed to connect to UCM, try again later");
+                this.getStatus();
             },
             methods: {
                 start(){
@@ -172,6 +155,42 @@
 
                     promiseSerial(steps).then( () => this.commit() );
 
+                },
+                getStatus(){
+                axios(this.paths.ucm.status + "/" + this.partner_id, {
+                        method: "get",
+                        withCredentials: true
+                    }).then( r => {
+
+                    if(r.data && r.data.version){
+
+                        if(parseFloat(r.data.version) > version){
+                            this.update = true;
+                        }
+                    }
+                    if(r.data && r.data.user){
+                        console.log(r.data);
+                        this.status.maintenance = r.data.maintenance;
+                        this.status.last_date = r.data.date && r.data.last_update.date || "Never";
+                        this.ready = true;
+                        this.showLogin = false;
+                    }
+
+                    }).catch( error => this.status.last_date = "Failed to connect to UCM, try again later");
+                },
+                doLogin(){
+                    axios(this.paths.ucm.login,{
+                        method: "post",
+                        data: {
+                            email: this.username,
+                            pass: this.password,
+                            usi: true
+                        },
+                        withCredentials: true
+                    }).then(r => {
+
+                                 this.getStatus();
+                    }).catch(err => console.error(err));
                 },
                 fetch(type){
                     return new Promise( (resolve, reject) => {
